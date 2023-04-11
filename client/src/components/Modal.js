@@ -9,17 +9,20 @@ const Modal = ({ mode, setShowModal, task, getData }) => {
     user_email: editMode ? task.user_email : "josem@gmail.com",
     title: editMode ? task.title : null,
     progress: editMode ? task.progress : 50,
-    date: editMode ? "" : new Date(),
+    date: editMode ? task.date : new Date(),
   });
 
   const postData = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/todos/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVERURL}/todos/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
       if (response.status === 200) {
         console.log("worked!");
         setShowModal(false);
@@ -33,7 +36,18 @@ const Modal = ({ mode, setShowModal, task, getData }) => {
   const editData = async (e) => {
     e.preventDefault();
     try {
-      await fetch(`http:localhost:8000/todos/${task.id}`);
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVERURL}/todos/${task.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+      if (response.status === 200) {
+        setShowModal(false);
+        getData();
+      }
     } catch (err) {
       console.error(err);
     }

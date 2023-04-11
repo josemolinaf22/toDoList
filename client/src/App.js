@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ListHeader from "./components/ListHeader";
 import ListItem from "./components/ListItem";
+import Auth from "./components/Auth";
 
 const App = () => {
   const userEmail = "josem@gmail.com";
   const [tasks, setTasks] = useState(null);
 
+  const authToken = false;
+
   const getData = async () => {
     try {
       // something here is missing that is bring back an empty array V
-      const response = await fetch(`http://localhost:8000/todos/${userEmail}`);
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVERURL}/todos/${userEmail}`
+      );
       const json = await response.json();
       setTasks(json);
     } catch (err) {
@@ -28,10 +33,15 @@ const App = () => {
 
   return (
     <div className="app">
-      <ListHeader listName={"Holiday tick"} getData={getData} />
-      {sortedTasks?.map((task) => (
-        <ListItem key={task.id} task={task} getData={getData} />
-      ))}
+      {!authToken && <Auth />}
+      {authToken && (
+        <>
+          <ListHeader listName={"Holiday tick"} getData={getData} />
+          {sortedTasks?.map((task) => (
+            <ListItem key={task.id} task={task} getData={getData} />
+          ))}
+        </>
+      )}
     </div>
   );
 };
