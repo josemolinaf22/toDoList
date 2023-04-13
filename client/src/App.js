@@ -7,7 +7,7 @@ const App = () => {
   const userEmail = "josem@gmail.com";
   const [tasks, setTasks] = useState(null);
 
-  const authToken = false;
+  const authToken = true;
 
   const getData = async () => {
     try {
@@ -22,7 +22,11 @@ const App = () => {
     }
   };
 
-  useEffect(() => getData, []);
+  useEffect(() => {
+    if (authToken) {
+      getData();
+    }
+  }, []);
 
   // console.log(tasks);
 
